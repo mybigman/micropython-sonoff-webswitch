@@ -1,3 +1,4 @@
+import gc
 import sys
 
 import machine
@@ -52,3 +53,23 @@ async def get_reset(server, reader, writer, querystring, body):
 
     from reset import ResetDevice
     ResetDevice(reason='Reset via web page').schedule(period=15000)
+
+
+async def get_mem_info(server, reader, writer, querystring, body):
+    from mem_info import mem_info
+    mem_info = mem_info()
+    del sys.modules['mem_info']
+    gc.collect()
+
+    from template import render
+    await server.send_html_page(
+        writer,
+        filename='webswitch.html',
+        content_iterator=render(
+            filename='http_internals_mem_info.html',
+            context={
+                'mem_info': mem_info
+            },
+            content_iterator=None
+        ),
+    )
