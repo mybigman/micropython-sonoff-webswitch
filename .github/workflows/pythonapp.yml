@@ -13,9 +13,6 @@ jobs:
         sudo -E apt-get -qq install build-essential git-core
         wget --no-verbose https://github.com/jepler/esp-open-sdk/releases/download/2018-06-10/xtensa-lx106-elf-standalone.tar.gz
         zcat xtensa-lx106-elf-standalone.tar.gz | tar x
-        ls -la
-        ls -la $(pwd)/xtensa-lx106-elf/bin
-        export PATH=$(pwd)/xtensa-lx106-elf/bin:$PATH
 
     - name: checkout
       run: git clone --depth=5 https://github.com/micropython/micropython.git
@@ -24,7 +21,8 @@ jobs:
       env:
          MAKEOPTS: "-j4"
       run: |
-        echo ${PATH}
+        ls -la $(pwd)/xtensa-lx106-elf/bin
+        export PATH=$(pwd)/xtensa-lx106-elf/bin:$PATH
         cd micropython
         make ${MAKEOPTS} -C mpy-cross
         make ${MAKEOPTS} -C ports/esp8266 submodules
