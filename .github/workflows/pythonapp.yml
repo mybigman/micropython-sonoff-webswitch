@@ -20,7 +20,7 @@ jobs:
       
     - name: compile micropython
       env:
-         MAKEOPTS="-j4"
+         MAKEOPTS: "-j4"
       run: |
           make ${MAKEOPTS} -C mpy-cross
           make ${MAKEOPTS} -C ports/esp8266 submodules
